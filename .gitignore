@@ -1,0 +1,11 @@
+# build output
+dist/
+
+# local tooling
+node_modules/
+__pycache__/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp

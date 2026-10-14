@@ -1,0 +1,16 @@
+{
+  "name": "leetgpu-vim",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vim keybindings for the code editor on leetgpu.com (Chrome/Edge MV3 extension, powered by monaco-vim).",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "check": "node tools/vendor.mjs --check",
+    "build": "node tools/build.mjs",
+    "icons": "python3 tools/make-icons.py"
+  }
+}

@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Downloads monaco-vim from npm, checks its sha512 integrity and asserts
+      # that vendor/monaco-vim.js on disk is exactly the pinned build + patch.
+      - name: Verify vendored monaco-vim
+        run: node tools/vendor.mjs --check
+
+      - name: Syntax-check scripts
+        run: |
+          for file in src/vim-hook.js vendor/monaco-vim.js tools/vendor.mjs tools/build.mjs; do
+            node --check "$file"
+          done
+
+      - name: Validate manifest.json
+        run: node -e "JSON.parse(require('node:fs').readFileSync('manifest.json', 'utf8'))"
+
+      - name: Build distributable zip
+        run: node tools/build.mjs
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: leetgpu-vim-zip
+          path: dist/*.zip
+          if-no-files-found: error
